@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET SET GO</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header>
+        <h1>GET SET GO</h1>
+        <p>Write your name on block chain and get it back from there</p>
+    </header>
+    <section class="headsup">
+        <p>Make sure to have metamask installed on your browser</p>
+    </section>
+    <section class="main">
+        <input type="text" id="name" placeholder="Enter your name here">
+        <button class="set" onclick="setName()">Set Name</button>
+        <p class="headsup">Before clicking on "Get Name", make sure the transaction of "Set Name" is completed.</p>
+        <button class="get" onclick="getName()">Get Name</button>
+        <h3 id="namelast"></h3>
+    </section>
+    <footer>
+        <p>This is my first dApp.</p>
+        <p>Checkout my socials <a href="https://twitter.com/VChiranjeeviAK">Twitter</a>, <a href="https://www.linkedin.com/in/chiranjeevi-tirunagari-685459191/">LinkedIn</a>, <a href="https://www.showwcase.com/vchiranjeeviak">Showwcase</a></p>
+    </footer>
+</body>
+<script
+  src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+  type="application/javascript"
+></script>
+<script>
+    const contractAddress = "0x677bAA04FD2CB244Bf9916f7c35aaC35de1ABF16";
+    const contractABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "setName",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getName",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+    let signer;
+    let contract;
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby");
+    provider.send("eth_requestAccounts", []).then(() => {
+        provider.listAccounts().then((accounts) => {
+            signer = provider.getSigner(accounts[0]);
+            contract = new ethers.Contract(contractAddress, contractABI, signer);
+        })
+    })
+    async function getName(){
+        const name = await contract.getName();
+        document.getElementById('namelast').innerHTML = name;        
+    }
+    async function setName (){
+        document.getElementById('namelast').innerHTML = "";        
+        const name = document.getElementById('name').value;
+        await contract.setName(name);
+    }
+</script>
+</html>
