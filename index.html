@@ -32,8 +32,8 @@
   type="application/javascript"
 ></script>
 <script>
-    const contractAddress = "0x677bAA04FD2CB244Bf9916f7c35aaC35de1ABF16";
-    const contractABI = [
+    const contractAddress = "0x677bAA04FD2CB244Bf9916f7c35aaC35de1ABF16"; // Contract Address
+    const contractABI = [  // Contract ABI to know the structure of public functions in it
 	{
 		"inputs": [
 			{
@@ -63,15 +63,15 @@
 ];
     let signer;
     let contract;
-    const provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby");
-    provider.send("eth_requestAccounts", []).then(() => {
-        provider.listAccounts().then((accounts) => {
-            signer = provider.getSigner(accounts[0]);
-            contract = new ethers.Contract(contractAddress, contractABI, signer);
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby"); // Connecting to the wallet and rinkeby network
+    provider.send("eth_requestAccounts", []).then(() => { // Establishing connection
+        provider.listAccounts().then((accounts) => { // Getting list of accounts in that wallet
+            signer = provider.getSigner(accounts[0]); // Making the first account in it as the signer of the transaction
+            contract = new ethers.Contract(contractAddress, contractABI, signer); // Creating contract object using address, abi, signer
         })
     })
     async function getName(){
-        const name = await contract.getName();
+        const name = await contract.getName(); 
         document.getElementById('namelast').innerHTML = name;        
     }
     async function setName (){
